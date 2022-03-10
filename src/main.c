@@ -21,6 +21,8 @@
 // Mount point in VFS
 #define SITE_MOUNT_POINT "/www"
 
+#define ESP_WIFI_SSID "Example SSID"
+#define ESP_WIFI_PASSWORD "Example Password"
 #define ESP_MAXIMUM_RETRY 10
 
 static EventGroupHandle_t s_wifi_event_group;
