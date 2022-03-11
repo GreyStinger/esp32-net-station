@@ -38,6 +38,8 @@ static esp_err_t set_content_type_from_file(httpd_req_t *req, const char *filepa
 
 static esp_err_t rest_common_get_handler(httpd_req_t *req)
 {
+  ESP_LOGI(REST_TAG, "The full uri is: %s", req->uri);
+
   char filepath[FILE_PATH_MAX];
 
   rest_server_context_t *rest_context = (rest_server_context_t *) req->user_ctx;
@@ -68,7 +70,7 @@ static esp_err_t rest_common_get_handler(httpd_req_t *req)
     read_bytes = read(fd, chunk, SCRATCH_BUFFSIZE);
     if (read_bytes == -1)
     {
-      ESP_LOGE(REST_TAG, "Failed to read file:%s", filepath);
+      ESP_LOGE(REST_TAG, "Failed to read file: %s", filepath);
     }
     else if (read_bytes > 0)
     {
@@ -89,9 +91,9 @@ static esp_err_t rest_common_get_handler(httpd_req_t *req)
   return ESP_OK;
 }
 
-esp_err_t gpio_set_handler(httpd_req_t *req)
+static esp_err_t gpio_set_handler(httpd_req_t *req)
 {
-  gpio_state = gpio_get_level(2);
+  ESP_LOGI(REST_TAG, "The full uri is:%s", req->uri);
 
   httpd_resp_set_type(req, "application/json");
 
@@ -100,7 +102,7 @@ esp_err_t gpio_set_handler(httpd_req_t *req)
 
   cJSON *root = cJSON_CreateObject();
   cJSON_AddNumberToObject(root, "gpio-num", 2);
-  cJSON_AddBoolToObject(root, "Set on too: ", (gpio_state) ? true : false);
+  cJSON_AddNumberToObject(root, "Set on too: ", gpio_state);
 
   const char *gpio_data = cJSON_Print(root);
   httpd_resp_sendstr(req, gpio_data);
