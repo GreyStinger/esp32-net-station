@@ -1,3 +1,6 @@
+#ifndef _ESP_REST_SERVER
+#define _ESP_REST_SERVER
+
 #include <string.h>
 #include <fcntl.h>
 #include <driver/gpio.h>
@@ -30,3 +33,5 @@ typedef struct rest_server_context {
 } rest_server_context_t;
 
 esp_err_t start_rest_server(const char *base_path);
+
+#endif

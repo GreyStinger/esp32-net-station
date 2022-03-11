@@ -1,0 +1,1 @@
+Setup query map system for storing query key value pairs
