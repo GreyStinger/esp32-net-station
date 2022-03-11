@@ -11,18 +11,13 @@
 #include <esp_log.h>
 #include <lwip/apps/netbiosns.h>
 #include <rest_server.h>
+#include <config.h>
 
 
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT BIT1
 
-#define MDNS_INSTANCE "ESP-WebServer"
-#define HOSTNAME "esp-web-server"
-// Mount point in VFS
-#define SITE_MOUNT_POINT "/www"
 
-#define ESP_WIFI_SSID "Example SSID"
-#define ESP_WIFI_PASSWORD "Example Password"
 #define ESP_MAXIMUM_RETRY 10
 
 static EventGroupHandle_t s_wifi_event_group;
