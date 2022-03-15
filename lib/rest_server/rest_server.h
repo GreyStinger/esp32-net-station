@@ -11,6 +11,7 @@
 #include <esp_log.h>
 #include <esp_vfs.h>
 #include <cJSON.h>
+#include <query_handler.h>
 
 #define REST_CHECK(a, str, goto_tag, ...)                                      \
   do                                                                           \

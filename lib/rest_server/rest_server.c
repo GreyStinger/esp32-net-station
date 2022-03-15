@@ -4,24 +4,6 @@ static const char *REST_TAG = "station-rest";
 static uint8_t gpio_state = 0;
 // static uint8_t gpio_num = 2;
 
-static void handle_query(const char *uri)
-{
-  esp_query_map_t q_map[16];
-  char current_query[255];
-  char * query_index = strrchr(uri, '?');
-
-  memcpy(current_query, query_index + 1, strlen(query_index) - 1);
-  ESP_LOGI(REST_TAG, "Query Now: %s", current_query);
-  
-  query_index = strrchr(uri, '&');
-  // int query_len;
-
-  for (int i = 0; query_index; ++i)
-  {
-    query_index = strrchr(uri, '&');
-  }
-}
-
 static esp_err_t set_content_type_from_file(httpd_req_t *req, const char *filepath)
 {
   const char *type = "text/plain";
@@ -112,17 +94,17 @@ static esp_err_t rest_common_get_handler(httpd_req_t *req)
 
 static esp_err_t gpio_set_handler(httpd_req_t *req)
 {
-  ESP_LOGI(REST_TAG, "The full uri is:%s", req->uri);
+  httpd_resp_set_type(req, "application/json");
 
   handle_query(req->uri);
 
-  httpd_resp_set_type(req, "application/json");
-
   gpio_state = !gpio_state;
   gpio_set_level(2, gpio_state);
+  gpio_set_level(25, gpio_state);
 
   cJSON *root = cJSON_CreateObject();
-  cJSON_AddNumberToObject(root, "gpio-num", 2);
+  cJSON_AddNumberToObject(root, "gpio-num-1", 2);
+  cJSON_AddNumberToObject(root, "gpio-num-2", 25);
   cJSON_AddNumberToObject(root, "Set on too: ", gpio_state);
 
   const char *gpio_data = cJSON_Print(root);

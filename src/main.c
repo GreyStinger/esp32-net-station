@@ -12,6 +12,7 @@
 #include <lwip/apps/netbiosns.h>
 #include <rest_server.h>
 #include <config.h>
+#include <rc522.h>
 
 
 #define WIFI_CONNECTED_BIT BIT0
@@ -22,9 +23,36 @@
 
 static EventGroupHandle_t s_wifi_event_group;
 
-static char *TAG = "station board";
+static char *TAG = "MAIN";
 
 static int s_retry_num = 0;
+
+void tag_handler(uint8_t* serial_no)
+{
+  printf("Array Size: %d\n", sizeof(*serial_no));
+  for (int i = 0; i < 5; ++i)
+  {
+    printf("Digit: %d is: %#x\n", i, serial_no[i]);
+  }
+}
+
+// void auth_handler()
+// {
+
+// }
+
+static void setup_rfid()
+{
+  rc522_start_args_t start_args = {
+    .miso_io = 19,
+    .mosi_io = 23,
+    .sck_io = 18,
+    .sda_io = 21,
+    .callback = &tag_handler,
+  };
+
+  rc522_start(start_args);
+}
 
 static void init_mdns()
 {
@@ -81,8 +109,10 @@ void gpio_setup()
 {
   ESP_LOGI(TAG, "Configuring pin 2 for output.");
   gpio_reset_pin(2);
+  gpio_reset_pin(25);
 
   gpio_set_direction(2, GPIO_MODE_OUTPUT);
+  gpio_set_direction(25, GPIO_MODE_OUTPUT);
 }
 
 esp_err_t init_fs(void)
@@ -209,6 +239,7 @@ void app_main()
   ESP_ERROR_CHECK(ret);
 
   ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+  // setup_rfid();
   gpio_setup();
   setup_wifi();
   init_mdns();
