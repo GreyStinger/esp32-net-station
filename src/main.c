@@ -100,21 +100,6 @@ static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_
   }
 }
 
-void blink() 
-{
-  gpio_set_level(2, 1);
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
-  gpio_set_level(2, 0);
-}
-
-void gpio_setup()
-{
-  ESP_LOGI(TAG, "Configuring pins for output.");
-  for (int i = 0; i < N_GPIOS_IN; ++i) gpio_reset_pin(GPIOS_IN[i]), gpio_set_direction(GPIOS_IN[i], GPIO_MODE_INPUT);
-
-  for (int i = 0; i < N_GPIOS_OUT; ++i) gpio_reset_pin(GPIOS_OUT[i]), gpio_set_direction(GPIOS_OUT[i], GPIO_MODE_OUTPUT);
-}
-
 esp_err_t init_fs(void)
 {
   esp_vfs_spiffs_conf_t conf = {
