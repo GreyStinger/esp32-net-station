@@ -1,5 +1,5 @@
-#ifndef _ESP_REST_SERVER
-#define _ESP_REST_SERVER
+#ifndef _STATION_REST_SERVER
+#define _STATION_REST_SERVER
 
 #include <string.h>
 #include <fcntl.h>
@@ -12,6 +12,7 @@
 #include <esp_vfs.h>
 #include <cJSON.h>
 #include <query_handler.h>
+#include <globals.h>
 
 #define REST_CHECK(a, str, goto_tag, ...)                                      \
   do                                                                           \

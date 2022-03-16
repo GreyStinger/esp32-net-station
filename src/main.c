@@ -24,6 +24,10 @@
 static EventGroupHandle_t s_wifi_event_group;
 
 static char *TAG = "MAIN";
+#define N_INIT_GPIO_IN 1
+static int INIT_GPIOS_IN[] = {26};
+#define N_INIT_GPIO_OUT 2
+static int INIT_GPIOS_OUT[] = {25, 27};
 
 static int s_retry_num = 0;
 
@@ -107,12 +111,10 @@ void blink()
 
 void gpio_setup()
 {
-  ESP_LOGI(TAG, "Configuring pin 2 for output.");
-  gpio_reset_pin(2);
-  gpio_reset_pin(25);
+  ESP_LOGI(TAG, "Configuring pins for output.");
+  for (int i = 0; i < N_INIT_GPIO_IN; ++i) gpio_reset_pin(INIT_GPIOS_IN[i]), gpio_set_direction(INIT_GPIOS_IN[i], GPIO_MODE_INPUT);
 
-  gpio_set_direction(2, GPIO_MODE_OUTPUT);
-  gpio_set_direction(25, GPIO_MODE_OUTPUT);
+  for (int i = 0; i < N_INIT_GPIO_OUT; ++i) gpio_reset_pin(INIT_GPIOS_OUT[i]), gpio_set_direction(INIT_GPIOS_OUT[i], GPIO_MODE_OUTPUT);
 }
 
 esp_err_t init_fs(void)

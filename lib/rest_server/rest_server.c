@@ -1,7 +1,7 @@
 #include <rest_server.h>
 
 static const char *REST_TAG = "station-rest";
-static uint8_t gpio_state = 0;
+
 // static uint8_t gpio_num = 2;
 
 static esp_err_t set_content_type_from_file(httpd_req_t *req, const char *filepath)
