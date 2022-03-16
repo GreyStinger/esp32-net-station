@@ -39,8 +39,6 @@ static esp_err_t set_content_type_from_file(httpd_req_t *req, const char *filepa
 
 static esp_err_t rest_common_get_handler(httpd_req_t *req)
 {
-  ESP_LOGI(REST_TAG, "The full uri is: %s", req->uri);
-
   char filepath[FILE_PATH_MAX];
 
   rest_server_context_t *rest_context = (rest_server_context_t *) req->user_ctx;
@@ -148,7 +146,8 @@ esp_err_t start_rest_server(const char *base_path)
     .user_ctx = rest_context
   };
   httpd_register_uri_handler(server, &common_get_uri);
-
+  
+  ESP_LOGI(REST_TAG, "Successfully started Rest Server");
   return ESP_OK;
 err_start:
   free(rest_context);

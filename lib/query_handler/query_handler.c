@@ -38,54 +38,55 @@ void handle_query(const char *uri)
 {  
   ESP_LOGI(QUERY_TAG, "The full uri is:%s", uri);
 
-  char *start = strrchr(uri, '?');
+  char *start = strrchr(uri, '?') + 1;
   char *end = strchr(uri, '=');
   if (start == NULL) return;
   // char current_query[255];
   // char query_double[255];
+  int buffer_len = 0;
 
   esp_query_pair_t *my_esp_query_pair = esp_create_query_pair("Hello", "World");
   char *key_buff = (char *) calloc(0, 32 * sizeof(char));
   char *val_buff = (char *) calloc(0, 64 * sizeof(char));
-  
-  // memcpy(current_query, &start, strlen(start));
-  
-  // strcat(current_query, "\0");
-
-  // char *end = strchr(uri, '=');
-  // start = strchr(current_query, '?');
-
-  ESP_LOGI(QUERY_TAG, "Successfully initialised variables");
 
   for (int i = 0; start != NULL && end != NULL; ++i)
   {
     // Handle Key:
+    buffer_len = end - start;
 
-    ESP_LOGI(QUERY_TAG, "The Query Is: %s", start);
-    if (end - start + 1 > 32) key_buff = (char *) realloc(key_buff, (end - start + 1) * sizeof(char));
-    memcpy(&key_buff, &start, end - start);
-    key_buff[end - start] = '\0';
+    ESP_LOGW(QUERY_TAG, "Start pointer = %s and end pointer = %s", start, end);
 
-    ESP_LOGI(QUERY_TAG, "The key is: %s", key_buff);
+    if (buffer_len + 1 > 32) key_buff = (char *) realloc(key_buff, (buffer_len + 1) * sizeof(char));
+    memcpy(&key_buff, &start, buffer_len);
+    key_buff[buffer_len] = '\0';
 
-    start = end;
-    end = strchr(start + 1, '&');
+    ESP_LOGW(QUERY_TAG, "Start pointer = %s and end pointer = %s", start, end + 1);
+
+    start = (char *) end + 1;
+    end = strchr(start, '&');
+
+    buffer_len = end - start;
+
+    ESP_LOGW(QUERY_TAG, "Start pointer = %s and end pointer = %s", start, end);
     
     // TODO: Find last element if there is no &
     if (end == NULL) end = (char *) &start[strlen(start) - 1];
 
     // Handle Value:
     if (end - start + 1 > 64) val_buff = (char *) realloc(val_buff, (end - start + 1) * sizeof(char));
-    memcpy(&val_buff, &start, end - start);
-    val_buff[end - start] = '\0';
+    memcpy(&val_buff, &start, buffer_len);
+    val_buff[buffer_len] = '\0';
+
+    if (*end != '\0') start = (char *) end + 1;
+    end = strchr(start, '=');
 
     ESP_LOGI(QUERY_TAG, "The val is: %s", val_buff);
 
     add_pair(my_esp_query_pair, key_buff, val_buff);
   }
 
-  free(start);
-  free(end);
+  free(key_buff);
+  free(val_buff);
 
   esp_query_pair_t *current_map;
   for (current_map = my_esp_query_pair; NULL != current_map; current_map = current_map->next)

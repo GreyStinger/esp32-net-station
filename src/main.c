@@ -12,7 +12,7 @@
 #include <lwip/apps/netbiosns.h>
 #include <rest_server.h>
 #include <config.h>
-#include <rc522.h>
+// #include <rc522.h>
 
 
 #define WIFI_CONNECTED_BIT BIT0
@@ -27,32 +27,32 @@ static char *TAG = "MAIN";
 
 static int s_retry_num = 0;
 
-void tag_handler(uint8_t* serial_no)
-{
-  printf("Array Size: %d\n", sizeof(*serial_no));
-  for (int i = 0; i < 5; ++i)
-  {
-    printf("Digit: %d is: %#x\n", i, serial_no[i]);
-  }
-}
+// void tag_handler(uint8_t* serial_no)
+// {
+//   // printf("Array Size: %d\n", sizeof(*serial_no));
+//   for (int i = 0; i < 5; ++i)
+//   {
+//     printf("Digit: %d is: %#x\n", i, serial_no[i]);
+//   }
+// }
 
 // void auth_handler()
 // {
 
 // }
 
-static void setup_rfid()
-{
-  rc522_start_args_t start_args = {
-    .miso_io = 19,
-    .mosi_io = 23,
-    .sck_io = 18,
-    .sda_io = 21,
-    .callback = &tag_handler,
-  };
+// static void setup_rfid()
+// {
+//   rc522_start_args_t start_args = {
+//     .miso_io = 19,
+//     .mosi_io = 23,
+//     .sck_io = 18,
+//     .sda_io = 21,
+//     .callback = &tag_handler,
+//   };
 
-  rc522_start(start_args);
-}
+//   rc522_start(start_args);
+// }
 
 static void init_mdns()
 {
