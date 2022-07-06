@@ -14,6 +14,7 @@
 #include <rest_server.h>
 #include <config.h>
 #include <globals.h>
+#include <station_gpio_handler.h>
 // #include <rc522.h>
 
 

@@ -1,5 +1,13 @@
 #include <station_gpio_handler.h>
 
+#include <freertos/event_groups.h>
+#include <esp_log.h>
+#include <esp_err.h>
+
+#include <driver/gpio.h>
+#include <config.h>
+#include <globals.h>
+
 static char *GPIO_TAG = "gpio_handler";
 
 void blink() 
