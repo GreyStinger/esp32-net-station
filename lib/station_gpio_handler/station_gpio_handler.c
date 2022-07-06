@@ -1,5 +1,6 @@
 #include <station_gpio_handler.h>
 
+#include <freertos/FreeRTOS.h>
 #include <freertos/event_groups.h>
 #include <esp_log.h>
 #include <esp_err.h>
@@ -10,7 +11,7 @@
 
 static char *GPIO_TAG = "gpio_handler";
 
-void blink() 
+void blink()
 {
   gpio_set_level(2, 1);
   vTaskDelay(1000 / portTICK_PERIOD_MS);
