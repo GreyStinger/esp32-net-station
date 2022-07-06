@@ -1,5 +1,16 @@
 {
 	"cSpell.words": [
-		"GPIO"
+		"accesspoint",
+		"authmode",
+		"BUFFSIZE",
+		"dhcpc",
+		"GPIO",
+		"GPIOS",
+		"LOGI",
+		"LOGW",
+		"mdns",
+		"netbiosns",
+		"netif",
+		"SSID"
 	]
 }

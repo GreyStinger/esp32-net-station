@@ -15,7 +15,6 @@
 #include <config.h>
 #include <globals.h>
 #include <station_gpio_handler.h>
-// #include <rc522.h>
 
 
 #define WIFI_CONNECTED_BIT BIT0
@@ -199,7 +198,6 @@ void app_main()
   ESP_ERROR_CHECK(ret);
 
   ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-  // setup_rfid();
   gpio_setup();
   setup_wifi();
   init_mdns();
