@@ -3,6 +3,7 @@
 		"accesspoint",
 		"authmode",
 		"BUFFSIZE",
+		"CMAKE",
 		"dhcpc",
 		"GPIO",
 		"GPIOS",
@@ -11,6 +12,9 @@
 		"mdns",
 		"netbiosns",
 		"netif",
+		"SRCS",
 		"SSID"
-	]
+	],
+	"idf.adapterTargetName": "esp32",
+	"cmake.configureOnOpen": true
 }
