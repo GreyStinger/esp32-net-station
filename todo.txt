@@ -1,2 +1,4 @@
-Setup query map system for storing query key value pairs
 Setup system for reading and writing to SD storage
+
+Done:
+	Setup query map system for storing query key value pairs

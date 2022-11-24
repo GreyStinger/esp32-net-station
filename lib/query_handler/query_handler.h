@@ -1,24 +1,20 @@
+#pragma once
 #ifndef _ESP_QUERY_HANDLER
 #define _ESP_QUERY_HANDLER
 
-#include <esp_log.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+// esp_query_pair_t is a linked list head
+// 
+// This will be used to create a linked list
+// for query key value pairs
 typedef struct esp_query_pair {
-    const char * key;                       /*!< item key name */
-    const char * value;                     /*!< item value string */
-    struct esp_query_pair* next;
+	char *key;
+	char *val;
+	struct esp_query_pair * next;
 } esp_query_pair_t;
 
-// typedef struct esp_query_map {
-//   struct 
-//   struct esp_query_pair* next;
-// } esp_query_map_t;
-
-void esp_delete_query_pair(esp_query_pair_t *esp_old_query_pair);
-// esp_query_pair_t handle_query(const char *uri);
-void handle_query(const char *uri);
+// Declarations for query_handler.c
+esp_query_pair_t *handle_esp_query(char *url);
+char *fetch_query_val(esp_query_pair_t *query_list, char *key);
+void free_esp_query_list(esp_query_pair_t *query_list);
 
 #endif
