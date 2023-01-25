@@ -31,9 +31,8 @@ static esp_query_pair_t * add_query_pair(esp_query_pair_t *last_pair, char *key,
 // and deallocates the whole linked list from memory
 void free_esp_query_list(esp_query_pair_t * query_list)
 {
-	if (query_list->next != NULL)
-		free_esp_query_list(query_list->next);
-		free(query_list->next);
+	if (query_list->next != NULL) free_esp_query_list(query_list->next);
+	free(query_list->next);
 	free(query_list->key);
 	free(query_list->val);
 }
@@ -60,34 +59,36 @@ char *fetch_query_val(esp_query_pair_t *query_list, char *key)
 // Url as parameter
 // Returns null if there is no query
 // Else returns a pointer to the first key_val pair
-esp_query_pair_t *handle_esp_query(char *url)
+esp_query_pair_t *handle_esp_query(const char *url)
 {
 	char *unhandled_query_section;
 	unhandled_query_section = strchr(url, '?');
+	esp_query_pair_t *query_pair_list = NULL;
 	if (unhandled_query_section == NULL) goto end;
 	char *key = (char *) malloc(0);
 	char *val = (char *) malloc(0);
 	char *divider;
 	unsigned int key_len = 0;
 	unsigned int val_len = 0;
-	esp_query_pair_t *query_pair_list = NULL;
 	do {
 		divider = strchr(unhandled_query_section, '=');
 		key_len = divider - (unhandled_query_section + 1);
+		// TODO: Test if malloc has to be key_len + 1 or can be just key_len
 		key = (char *) malloc(sizeof(char) * (key_len + 1));
 		if (key == NULL) goto end;
 		memcpy(key, unhandled_query_section + 1, key_len);
-		key[key_len + 1] = '\0';
+		key[key_len] = '\0';
 		
 		unhandled_query_section = divider;
 
 		divider = strchr(unhandled_query_section, '&');
 		if (divider == NULL) divider = strchr(unhandled_query_section, '\0');
 		val_len = divider - (unhandled_query_section + 1);
+		// TODO: Test if malloc has to be val_len + 1 or can be just val_len
 		val = (char *) malloc(sizeof(char) * (val_len + 1));
 		if (val == NULL) goto end;
 		memcpy(val, unhandled_query_section + 1, val_len);
-		val[val_len + 1] = '\0';
+		val[val_len] = '\0';
 
 		query_pair_list = add_query_pair(query_pair_list, key, val); 
 

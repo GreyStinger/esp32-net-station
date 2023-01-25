@@ -13,7 +13,7 @@ typedef struct esp_query_pair {
 } esp_query_pair_t;
 
 // Declarations for query_handler.c
-esp_query_pair_t *handle_esp_query(char *url);
+esp_query_pair_t *handle_esp_query(const char *url);
 char *fetch_query_val(esp_query_pair_t *query_list, char *key);
 void free_esp_query_list(esp_query_pair_t *query_list);
 
