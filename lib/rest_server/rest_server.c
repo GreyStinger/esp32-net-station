@@ -90,26 +90,75 @@ static esp_err_t rest_common_get_handler(httpd_req_t *req)
   return ESP_OK;
 }
 
-static esp_err_t gpio_set_handler(httpd_req_t *req)
+static esp_err_t rest_get_relay_state(httpd_req_t *req)
 {
   httpd_resp_set_type(req, "application/json");
 
-  handle_query(req->uri);
+  cJSON *root = cJSON_CreateObject();
+  if (relay_state) {
+    cJSON_AddStringToObject(root, "state", "on");
+  }
+  else {
+    cJSON_AddStringToObject(root, "state", "off");
+  }
+  const char *relay_data = cJSON_Print(root);
+  httpd_resp_sendstr(req, relay_data);
 
-  gpio_state = !gpio_state;
-  gpio_set_level(2, gpio_state);
-  gpio_set_level(25, gpio_state);
+  free((void *) relay_data);
+  cJSON_Delete(root);
+
+  return ESP_OK;
+}
+
+static esp_err_t rest_set_relay_state(httpd_req_t *req)
+{
+  httpd_resp_set_type(req, "application/json");
+
+  esp_query_pair_t *query_list = handle_esp_query(req->uri);
 
   cJSON *root = cJSON_CreateObject();
-  cJSON_AddNumberToObject(root, "gpio-num-1", 2);
-  cJSON_AddNumberToObject(root, "gpio-num-2", 25);
-  cJSON_AddNumberToObject(root, "Set on too: ", gpio_state);
 
+  char* key = fetch_query_val(query_list, "key");
+  if (key == NULL) 
+  {
+    ESP_LOGI(REST_TAG, "No key");
+    httpd_resp_send_500(req);
+    goto finish_set_relay;
+  }
+
+  if (!!strcmp(PV_KEY, key))
+  {
+    ESP_LOGI(REST_TAG, "Bad Key");
+    httpd_resp_send_500(req);
+    goto finish_set_relay;
+  }
+  
+  char* state = fetch_query_val(query_list, "state");
+  if (!strcmp(state, "on")) 
+  {
+    relay_state = 1;
+  } 
+  else if (!strcmp(state, "off")) 
+  {
+    relay_state = 0;
+  }
+  else {
+    ESP_LOGI(REST_TAG, "Bad state");
+    httpd_resp_send_500(req);
+    goto finish_set_relay;
+  }
+
+  gpio_set_level(25, relay_state);
+
+  cJSON_AddStringToObject(root, "state", state);
   const char *gpio_data = cJSON_Print(root);
   httpd_resp_sendstr(req, gpio_data);
 
   free((void *) gpio_data);
+
+finish_set_relay:
   cJSON_Delete(root);
+  free_esp_query_list(query_list);
 
   return ESP_OK;
 }
@@ -131,13 +180,20 @@ esp_err_t start_rest_server(const char *base_path)
   ESP_LOGI(REST_TAG, "Starting HTTP Server");
   REST_CHECK(httpd_start(&server, &config) == ESP_OK, "Server starting failed", err_start);
   
-  httpd_uri_t gpio_set_uri = {
-    .uri = "/api/v1/gpio/toggle/*",
+  httpd_uri_t set_relay_state = {
+    .uri = "/relay*",
     .method = HTTP_POST,
-    .handler = gpio_set_handler,
+    .handler = rest_set_relay_state,
     .user_ctx = rest_context
   };
-  httpd_register_uri_handler(server, &gpio_set_uri);
+  httpd_register_uri_handler(server, &set_relay_state);
+  httpd_uri_t fetch_relay_state = {
+    .uri = "/relay*",
+    .method = HTTP_GET,
+    .handler = rest_get_relay_state,
+    .user_ctx = rest_context
+  };
+  httpd_register_uri_handler(server, &fetch_relay_state);
 
   httpd_uri_t common_get_uri = {
     .uri = "/*",

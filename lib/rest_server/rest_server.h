@@ -13,6 +13,7 @@
 #include <cJSON.h>
 #include <query_handler.h>
 #include <globals.h>
+#include <config.h>
 
 #define REST_CHECK(a, str, goto_tag, ...)                                      \
   do                                                                           \
@@ -29,6 +30,7 @@
 #define FILE_PATH_MAX (ESP_VFS_PATH_MAX + 128)
 #define SCRATCH_BUFFSIZE (10240)
 
+/// @brief  Data to be handled by the rest server
 typedef struct rest_server_context {
   char base_path[ESP_VFS_PATH_MAX + 1];
   char scratch[SCRATCH_BUFFSIZE];

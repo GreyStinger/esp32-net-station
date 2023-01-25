@@ -21,4 +21,6 @@ int GPIOS_OUT[N_GPIOS_OUT];
 // Recommended to leave unless you know exactly what you are doing
 #define SITE_MOUNT_POINT "/www"
 
+#define PV_KEY "<key>"
+
 #endif

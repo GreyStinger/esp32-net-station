@@ -1,3 +1,3 @@
 #include <globals.h>
 
-uint8_t gpio_state = 0;
+uint8_t relay_state = 0;
