@@ -12,6 +12,7 @@
 		"mdns",
 		"netbiosns",
 		"netif",
+		"sendstr",
 		"SRCS",
 		"SSID"
 	],
