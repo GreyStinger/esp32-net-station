@@ -1,4 +1,4 @@
-#include "query_handler.h"
+#include "net_query_handler.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -59,42 +59,58 @@ char *fetch_query_val(esp_query_pair_t *query_list, char *key)
 // Url as parameter
 // Returns null if there is no query
 // Else returns a pointer to the first key_val pair
-esp_query_pair_t *handle_esp_query(const char *url)
-{
-	char *unhandled_query_section;
-	unhandled_query_section = strchr(url, '?');
-	esp_query_pair_t *query_pair_list = NULL;
-	if (unhandled_query_section == NULL) goto end;
-	char *key = (char *) malloc(0);
-	char *val = (char *) malloc(0);
-	char *divider;
-	unsigned int key_len = 0;
-	unsigned int val_len = 0;
-	do {
-		divider = strchr(unhandled_query_section, '=');
-		key_len = divider - (unhandled_query_section + 1);
-		// TODO: Test if malloc has to be key_len + 1 or can be just key_len
-		key = (char *) malloc(sizeof(char) * (key_len + 1));
-		if (key == NULL) goto end;
-		memcpy(key, unhandled_query_section + 1, key_len);
-		key[key_len] = '\0';
-		
-		unhandled_query_section = divider;
+esp_query_pair_t* handle_esp_query(const char* url) {
+    const char* unhandled_query_section = strchr(url, '?');
+    if (unhandled_query_section == NULL) {
+        return NULL;
+    }
 
-		divider = strchr(unhandled_query_section, '&');
-		if (divider == NULL) divider = strchr(unhandled_query_section, '\0');
-		val_len = divider - (unhandled_query_section + 1);
-		// TODO: Test if malloc has to be val_len + 1 or can be just val_len
-		val = (char *) malloc(sizeof(char) * (val_len + 1));
-		if (val == NULL) goto end;
-		memcpy(val, unhandled_query_section + 1, val_len);
-		val[val_len] = '\0';
+    esp_query_pair_t* query_pair_list = NULL;
+    const char* divider;
+    unsigned int key_len, val_len;
+    const char* key_start;
+    const char* val_start;
 
-		query_pair_list = add_query_pair(query_pair_list, key, val); 
+    while (*unhandled_query_section != '\0') {
+        unhandled_query_section++; // Move past '?', '&', or '\0'
+        key_start = unhandled_query_section;
 
-		unhandled_query_section = strchr(unhandled_query_section, '&');
-	} while(unhandled_query_section != NULL);
+        divider = strchr(key_start, '=');
+        if (divider == NULL) {
+            break;
+        }
 
-end:
-	return query_pair_list;
+        key_len = (unsigned int)(divider - key_start);
+        val_start = divider + 1;
+
+        divider = strpbrk(val_start, "&\0");
+        if (divider == NULL) {
+            val_len = (unsigned int)(strlen(val_start));
+        } else {
+            val_len = (unsigned int)(divider - val_start);
+        }
+
+        char* key = (char*)malloc(sizeof(char) * (key_len + 1));
+        char* val = (char*)malloc(sizeof(char) * (val_len + 1));
+
+        if (key == NULL || val == NULL) {
+            // Handle memory allocation error
+            free(key);
+            free(val);
+            // Free any previously allocated memory in query_pair_list
+            // and return appropriate error code or NULL
+            break;
+        }
+
+        memcpy(key, key_start, key_len);
+        key[key_len] = '\0';
+        memcpy(val, val_start, val_len);
+        val[val_len] = '\0';
+
+        query_pair_list = add_query_pair(query_pair_list, key, val);
+
+        unhandled_query_section = divider;
+    }
+
+    return query_pair_list;
 }

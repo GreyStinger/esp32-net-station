@@ -1,4 +1,5 @@
-Setup system for reading and writing to SD storage
+Setup nvs save + load systems
+Setup wps system with initial software trigger + save to nvs
 
-Done:
-	Setup query map system for storing query key value pairs
+wifi.c todo with saving password and ssid to nvs.
+

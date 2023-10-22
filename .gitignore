@@ -4,6 +4,6 @@
 .vscode/launch.json
 .vscode/ipch
 .VSCodeCounter/
-lib/config/config.h
+include/config.h
 build/
 

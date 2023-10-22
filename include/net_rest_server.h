@@ -1,5 +1,8 @@
+#pragma once
 #ifndef _STATION_REST_SERVER
 #define _STATION_REST_SERVER
+
+/// --- Modules ---
 
 #include <string.h>
 #include <fcntl.h>
@@ -11,9 +14,12 @@
 #include <esp_log.h>
 #include <esp_vfs.h>
 #include <cJSON.h>
-#include <query_handler.h>
-#include <globals.h>
-#include <config.h>
+
+#include "net_query_handler.h"
+#include "net_globals.h"
+#include "net_config.h"
+
+/// --- Constants ---
 
 #define REST_CHECK(a, str, goto_tag, ...)                                      \
   do                                                                           \
@@ -30,11 +36,15 @@
 #define FILE_PATH_MAX (ESP_VFS_PATH_MAX + 128)
 #define SCRATCH_BUFFSIZE (10240)
 
+/// --- Data Structure Definitions ---
+
 /// @brief  Data to be handled by the rest server
 typedef struct rest_server_context {
   char base_path[ESP_VFS_PATH_MAX + 1];
   char scratch[SCRATCH_BUFFSIZE];
 } rest_server_context_t;
+
+/// --- Function Definitions ---
 
 esp_err_t start_rest_server(const char *base_path);
 

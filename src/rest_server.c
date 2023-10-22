@@ -1,4 +1,4 @@
-#include <rest_server.h>
+#include <net_rest_server.h>
 
 static const char *REST_TAG = "station-rest";
 

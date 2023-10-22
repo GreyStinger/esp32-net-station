@@ -1,13 +1,16 @@
+#pragma once
 #ifndef _STATION_CONFIG
 #define _STATION_CONFIG
 
 // Hostname and MDNS instance name for local machines
-#define MDNS_INSTANCE "Example MDNS Instance"
-#define HOSTNAME "Example Local Hostname"
+#define MDNS_INSTANCE "esp-net"
+#define HOSTNAME "sprite-1"
 
 // Local wifi configurations
-#define ESP_WIFI_SSID "Example SSID"
-#define ESP_WIFI_PASSWORD "Example Password"
+#define ESP_WIFI_SSID "Grey-2.4"
+#define ESP_WIFI_PASSWORD "J@yd3n1Sec"
+#define ESP_IP "192.168.1.60"
+#define ESP_WEB_SOCKET_SERVER "192.168.1.37"
 
 // Idk
 #define N_GPIOS_IN 1
