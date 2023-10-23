@@ -2,4 +2,3 @@ Setup nvs save + load systems
 Setup wps system with initial software trigger + save to nvs
 
 wifi.c todo with saving password and ssid to nvs.
-
